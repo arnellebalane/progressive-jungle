@@ -72,6 +72,10 @@ button {
     outline: none;
 }
 
+a.button {
+    text-decoration: none;
+}
+
 
 .button--small {
     font-size: 1.4rem;
