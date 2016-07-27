@@ -104,6 +104,14 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 150ms ease;
+    will-change: transform, opacity;
+}
+
+
+.screen--maximized {
+    transform: scale(2);
+    opacity: 0;
 }
 
 
