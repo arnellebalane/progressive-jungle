@@ -42,6 +42,7 @@ $('.login-button').on('click', function() {
 
 $('.logout-button').on('click', function() {
     $(this).addClass('button--loading');
+    toast.close();
 
     setTimeout(function() {
         if (Math.random() < 0.5) {
