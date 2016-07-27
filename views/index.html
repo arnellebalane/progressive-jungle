@@ -10,9 +10,24 @@
     <body>
         <p class="toast">Successfully logged in!</p>
 
-        <div class="screen screen--login">
-            <button class="button button--google">Login with Google</button>
+        <div class="screen login-screen">
+            <button class="button button--google login-button">Login with Google</button>
         </div>
+
+        <form action="/send-message" class="screen screen--minimized message-screen form">
+            <h1 class="form__title">Hello, <strong>Arnelle</strong>!</h1>
+
+            <div class="form__input-group">
+                <input type="text" name="message" class="form__input">
+                <button class="button button--large">Send Message</button>
+                <button type="button" class="button button--large button--icon encrypt-button">&nbsp;</button>
+            </div>
+
+            <footer class="form__footer">
+                <button type="button" class="button button--small subscription-button">Subscribe to Push Notifications</button>
+                <button type="button" class="button button--small button--icon logout-button">&nbsp;</button>
+            </footer>
+        </form>
 
 
         <script src="../static/javascripts/jquery.js"></script>
