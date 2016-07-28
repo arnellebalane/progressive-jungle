@@ -43,3 +43,15 @@ app.post('/send-message', function(req, res) {
     messages.push().set(req.body);
     res.json({ success: true });
 });
+
+app.post('/subscribe', function(req, res) {
+    var subscriptionId = req.body.endpoint.replace(/.*\//g, '');
+    database.ref('subscriptions/' + subscriptionId).set(req.body);
+    res.json({ success: true });
+});
+
+app.post('/unsubscribe', function(req, res) {
+    var subscriptionId = req.body.endpoint.replace(/.*\//g, '');
+    database.ref('subscriptions/' + subscriptionId).remove();
+    res.json({ success: true });
+});

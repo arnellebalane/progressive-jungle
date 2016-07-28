@@ -109,6 +109,47 @@ var messageslist = (function() {
 })();
 
 
+var notifications = (function() {
+    function subscribe(subscription) {
+        var emitter = new EventEmitter();
+
+        $.ajax({
+            url: '/subscribe',
+            type: 'POST',
+            data: JSON.parse(subscription),
+            success: function(response) {
+                emitter.emit('subscribed', response);
+            },
+            error: function(error) {
+                emitter.emit('error', error);
+            }
+        });
+
+        return emitter;
+    }
+
+    function unsubscribe(subscription) {
+        var emitter = new EventEmitter();
+
+        $.ajax({
+            url: '/unsubscribe',
+            type: 'POST',
+            data: JSON.parse(subscription),
+            success: function(response) {
+                emitter.emit('subscribed', response);
+            },
+            error: function(error) {
+                emitter.emit('error', error);
+            }
+        });
+
+        return emitter;
+    }
+
+    return { subscribe: subscribe, unsubscribe, unsubscribe };
+})();
+
+
 
 
 
