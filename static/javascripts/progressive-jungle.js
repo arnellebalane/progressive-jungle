@@ -161,6 +161,21 @@ if (name !== 'null') {
 }
 
 
+function login(user) {
+    var profile = user.getBasicProfile();
+    localStorage.setItem('name', profile.getName());
+    localStorage.setItem('avatar', profile.getImageUrl());
+    $('.form__title strong').text(localStorage.getItem('name'));
+
+    toast.open('You are now logged in.');
+    $('.login-screen').addClass('screen--maximized');
+    $('.message-screen').removeClass('screen--minimized');
+}
+
+
+
+
+
 $('.login-button').on('click', function() {
     if ($(this).hasClass('button--loading')) {
         return null;
@@ -176,7 +191,6 @@ $('.login-button').on('click', function() {
             $('.message-screen').removeClass('screen--minimized');
             $(this).removeClass('button--loading');
 
-
             localStorage.setItem('name', 'Arnelle Balane');
             localStorage.setItem('avatar', 'https://avatars1.githubusercontent.com/u/1428598?v=3&s=460');
             $('.form__title strong').text(localStorage.getItem('name'));
@@ -189,27 +203,25 @@ $('.login-button').on('click', function() {
 
 
 $('.logout-button').on('click', function() {
-    if ($(this).hasClass('button--loading')) {
+    var button = $(this);
+
+    if (button.hasClass('button--loading')) {
         return null;
     }
 
-    $(this).addClass('button--loading');
+    button.addClass('button--loading');
     toast.close();
 
-    setTimeout(function() {
-        if (Math.random() < 0.5) {
-            toast.open('You are now logged out.');
-            $('.login-screen').removeClass('screen--maximized hidden');
-            $('.message-screen').addClass('screen--minimized');
-            $(this).removeClass('button--loading');
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        toast.open('You are now logged out.');
+        $('.login-screen').removeClass('screen--maximized hidden');
+        $('.message-screen').addClass('screen--minimized');
+        button.removeClass('button--loading');
 
-            localStorage.removeItem('name');
-            localStorage.removeItem('avatar');
-        } else {
-            toast.open('Logout failed. Please try again.');
-            $(this).removeClass('button--loading');
-        }
-    }.bind(this), 1000);
+        localStorage.removeItem('name');
+        localStorage.removeItem('avatar');
+    });
 });
 
 
