@@ -14,7 +14,7 @@ html {
 
 body {
     height: 100vh;
-    font-family: "Mononoki", monospace;
+    font-family: "Quicksand", sans-serif;
     color: #333;
 }
 
@@ -63,8 +63,9 @@ button {
 .button {
     display: inline-block;
     padding: 0.75em 1.5em;
-    border: 2px solid #333;
+    border: 0.15em solid #333;
     font-size: 1.8rem;
+    font-weight: bold;
     text-transform: uppercase;
     background: none;
     border-radius: 10rem;
@@ -88,7 +89,7 @@ a.button {
 
 
 .button--icon {
-    padding: 0.75em 1.05em;
+    padding: 0.75em 1.15em;
 }
 
 
@@ -158,8 +159,9 @@ a.button {
     display: inline-block;
     width: 50rem;
     padding: 0.75em 1.5em;
-    border: 2px solid #333;
+    border: 0.15em solid #333;
     font-size: 2.2rem;
+    font-weight: bold;
     border-radius: 10rem;
     outline: none;
 }
