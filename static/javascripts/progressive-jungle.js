@@ -158,9 +158,12 @@ $('.logout-button').on('click', function() {
     setTimeout(function() {
         if (Math.random() < 0.5) {
             toast.open('You are now logged out.');
-            $('.login-screen').removeClass('screen--maximized');
+            $('.login-screen').removeClass('screen--maximized hidden');
             $('.message-screen').addClass('screen--minimized');
             $(this).removeClass('button--loading');
+
+            localStorage.removeItem('name');
+            localStorage.removeItem('avatar');
         } else {
             toast.open('Logout failed. Please try again.');
             $(this).removeClass('button--loading');

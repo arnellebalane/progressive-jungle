@@ -306,3 +306,12 @@ a.button {
 .logout-button {
     background-image: url("../images/logout.png");
 }
+
+
+.home-button {
+    position: absolute;
+    top: 5vh;
+    left: 50%;
+    background-image: url("../images/home.png");
+    transform: translate(-50%, -50%);
+}
