@@ -23,6 +23,10 @@ var toast = (function() {
 
 
 $('.login-button').on('click', function() {
+    if ($(this).hasClass('button--loading')) {
+        return null;
+    }
+
     $(this).addClass('button--loading');
     toast.close();
 
@@ -41,6 +45,10 @@ $('.login-button').on('click', function() {
 
 
 $('.logout-button').on('click', function() {
+    if ($(this).hasClass('button--loading')) {
+        return null;
+    }
+
     $(this).addClass('button--loading');
     toast.close();
 
