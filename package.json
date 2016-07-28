@@ -1,0 +1,37 @@
+{
+  "name": "progressive-jungle",
+  "version": "0.0.0",
+  "description": "jungle-book themed progressive web apps demo",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "nconf": "^0.8.4",
+    "nodemon": "^1.10.0",
+    "nunjucks": "^2.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnellebalane/progressive-jungle.git"
+  },
+  "keywords": [
+    "jungle",
+    "book",
+    "progressive",
+    "web",
+    "apps",
+    "demo"
+  ],
+  "author": "Arnelle Balane <arnellebalane@gmail.com> (arnellebalane.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arnellebalane/progressive-jungle/issues"
+  },
+  "homepage": "https://github.com/arnellebalane/progressive-jungle#readme"
+}
