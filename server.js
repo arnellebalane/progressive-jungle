@@ -25,3 +25,8 @@ app.use('/static', express.static(path.join(__dirname, 'static')));
 app.get('/', function(req, res) {
     res.render('index.html');
 });
+
+app.post('/send-message', function(req, res) {
+    console.log(req.body);
+    res.json({ success: true });
+});
