@@ -65,8 +65,8 @@ var messenger = (function() {
             url: '/send-message',
             type: 'POST',
             data: {
-                name: 'Arnelle Balane',
-                avatar: 'https://avatars1.githubusercontent.com/u/1428598?v=3&s=460',
+                name: localStorage.getItem('name'),
+                avatar: localStorage.getItem('avatar'),
                 message: message
             },
             success: function(response) {
@@ -87,6 +87,14 @@ var messenger = (function() {
 
 
 
+var name = localStorage.getItem('name');
+if (name !== 'null') {
+    $('.login-screen').addClass('hidden');
+    $('.message-screen').removeClass('screen--minimized');
+    $('.form__title strong').text(name);
+}
+
+
 $('.login-button').on('click', function() {
     if ($(this).hasClass('button--loading')) {
         return null;
@@ -101,6 +109,11 @@ $('.login-button').on('click', function() {
             $('.login-screen').addClass('screen--maximized');
             $('.message-screen').removeClass('screen--minimized');
             $(this).removeClass('button--loading');
+
+
+            localStorage.setItem('name', 'Arnelle Balane');
+            localStorage.setItem('avatar', 'https://avatars1.githubusercontent.com/u/1428598?v=3&s=460');
+            $('.form__title strong').text(localStorage.getItem('name'));
         } else {
             toast.open('Login failed. Please try again.');
             $(this).removeClass('button--loading');
