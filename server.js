@@ -3,6 +3,7 @@ var express = require('express');
 var bodyparser = require('body-parser');
 var nunjucks = require('nunjucks');
 var morgan = require('morgan');
+var firebase = require('firebase');
 var config = require('./config');
 
 
@@ -20,6 +21,14 @@ app.listen(config.get('PORT'), function() {
 
 
 
+firebase.initializeApp({
+    databaseURL: config.get('FIREBASE_DATABASE_URL')
+});
+var database = firebase.database();
+var messages = database.ref('messages');
+
+
+
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 app.get('/', function(req, res) {
@@ -27,6 +36,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('/send-message', function(req, res) {
-    console.log(req.body);
+    messages.push().set(req.body);
     res.json({ success: true });
 });
