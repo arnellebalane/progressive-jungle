@@ -35,6 +35,10 @@ app.get('/', function(req, res) {
     res.render('index.html');
 });
 
+app.get('/messages', function(req, res) {
+    res.render('messages.html');
+});
+
 app.post('/send-message', function(req, res) {
     messages.push().set(req.body);
     res.json({ success: true });

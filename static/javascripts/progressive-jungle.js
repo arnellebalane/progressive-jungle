@@ -84,6 +84,31 @@ var messenger = (function() {
 })();
 
 
+var messageslist = (function() {
+    var container = $('.messages');
+
+    function add(data) {
+        var message = $('<div class="message"></div>');
+        var avatar = $('<img class="message__avatar">');
+        var body = $('<div class="message__body"></div>');
+        var sender = $('<span class="message__sender"></span>');
+
+        avatar.attr('src', data.avatar);
+        sender.text(data.name);
+
+        message.append(avatar).append(body);
+        body.append(sender).append('<p>' + data.message + '</p>');
+        container.prepend(message);
+
+        setTimeout(function() {
+            message.addClass('message--show');
+        }, 10);
+    }
+
+    return { add: add };
+})();
+
+
 
 
 

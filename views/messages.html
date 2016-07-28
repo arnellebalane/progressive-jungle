@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Progressive Jungle</title>
+
+        <link rel="stylesheet" href="/static/stylesheets/progressive-jungle.css">
+    </head>
+
+    <body>
+        <ul class="messages"></ul>
+
+
+        <script src="/static/javascripts/jquery.js"></script>
+        <script src="/static/javascripts/progressive-jungle.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
+        <script>
+            var config = {
+                apiKey: "AIzaSyBq9811QZoH_nMHkmKj0HHe4Evcjw8uC4w",
+                authDomain: "progressive-jungle.firebaseapp.com",
+                databaseURL: "https://progressive-jungle.firebaseio.com",
+                storageBucket: "progressive-jungle.appspot.com",
+            };
+            firebase.initializeApp(config);
+        </script>
+        <script>
+            var database = firebase.database();
+            var messages = database.ref('messages');
+
+            messages.on('child_added', function(data) {
+                messageslist.add(data.val());
+            });
+        </script>
+    </body>
+</html>
