@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Progressive Jungle</title>
+
+        <link rel="stylesheet" href="../static/stylesheets/progressive-jungle.css">
+    </head>
+
+    <body>
+        <p class="toast">Successfully logged in!</p>
+
+        <div class="screen login-screen">
+            <button class="button button--google login-button">Login with Google</button>
+        </div>
+
+        <form action="/send-message" class="screen screen--minimized message-screen form">
+            <h1 class="form__title">Hello, <strong>Arnelle</strong>!</h1>
+
+            <div class="form__input-group">
+                <input type="text" name="message" class="form__input">
+                <button class="button button--large">Send Message</button>
+            </div>
+
+            <footer class="form__footer">
+                <button type="button" class="button button--small subscription-button">Subscribe to Push Notifications</button>
+                <a href="/messages" class="button button--small button--icon messages-button">&nbsp;</a>
+                <button type="button" class="button button--small button--icon logout-button">&nbsp;</button>
+            </footer>
+        </form>
+
+
+        <script src="../static/javascripts/jquery.js"></script>
+        <script src="../static/javascripts/progressive-jungle.js"></script>
+    </body>
+</html>
