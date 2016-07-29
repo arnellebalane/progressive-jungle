@@ -178,8 +178,7 @@ var idb = (function() {
 
         var objectStore = db.transaction(store, 'readwrite')
             .objectStore(store);
-        objectStore.add(data);
-        objectStore.onsuccess = function(e) {
+        objectStore.add(data).onsuccess = function(e) {
             emitter.emit('complete', e);
         };
 

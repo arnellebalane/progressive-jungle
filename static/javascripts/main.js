@@ -57,18 +57,51 @@ $('.subscription-button').on('click', function() {
 
 
 
+var form = $('.message-form');
+var messageInput = form.find('.form__input');
+var messageButton = form.find('.sendmessage-button');
+
+
+
 $('.message-form').on('submit', function(e) {
     e.preventDefault();
-
-    var form = $(this);
-    var messageInput = form.find('.form__input');
-    var messageButton = form.find('.sendmessage-button');
     var message = messageInput.val().trim();
 
     if (messageButton.hasClass('button--loading') || message.length === 0) {
         return null;
     }
 
+    messageInput.prop('readonly', true);
+    messageButton.addClass('button--loading');
+
+    if ('SyncManager' in window) {
+        var messageData = {
+            name: localStorage.getItem('name'),
+            avatar: localStorage.getItem('avatar'),
+            message: message,
+            senderId: localStorage.getItem('subscriptionId')
+        };
+        saveMessageToIndexedDb(messageData).on('complete', function(data) {
+            navigator.serviceWorker.getRegistration().then(function(registration) {
+                registration.sync.register('progressive-jungle-message')
+                    .then(function() {
+                        messageInput.val('');
+                        messageInput.prop('readonly', false);
+                        messageButton.removeClass('button--loading');
+                    })
+                    .catch(function(error) {
+                        sendMessageTraditionally(message);
+                    });
+            });
+        });
+    } else {
+        sendMessageTraditionally(message);
+    }
+});
+
+
+
+function sendMessageTraditionally(message) {
     messageInput.prop('readonly', true);
     messageButton.addClass('button--loading');
     message = sendMessageToEveryone(message);
@@ -84,23 +117,5 @@ $('.message-form').on('submit', function(e) {
         messageInput.prop('readonly', false);
         messageButton.removeClass('button--loading');
         toast.open('Message sending failed.');
-        backgroundSyncMessage({
-            message: messageInput.val().trim(),
-            name: localStorage.getItem('name'),
-            avatar: localStorage.getItem('avatar'),
-            senderId: localStorage.getItem('subscriptionId')
-        });
     });
-});
-
-
-
-function backgroundSyncMessage(message) {
-    if ('SyncManager' in window) {
-        navigator.serviceWorker.getRegistration().then(function(registration) {
-            registration.sync.register('progressive-jungle-message').then(function() {
-                saveMessageToIndexedDb(message);
-            });
-        });
-    }
 }

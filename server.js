@@ -12,6 +12,7 @@ var config = require('./config');
 var app = express();
 
 app.use(morgan('dev'));
+app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
 app.set('views', path.join(__dirname, 'views'));
