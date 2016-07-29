@@ -1,4 +1,4 @@
-var cacheName = 'cache-v6';
+var cacheName = 'cache-v7';
 var urlsToCache = [
     '/',
     '/offline',
@@ -13,42 +13,6 @@ var urlsToCache = [
     '/static/fonts/quicksand/bold.woff2',
     '/static/fonts/quicksand/regular.woff2'
 ];
-
-
-var db = null;
-
-function getAllMessages() {
-    return new Promise(function(resolve, reject) {
-        if (!db) {
-            return reject();
-        }
-        var objects = [];
-        var objectStore = db.transaction('messages').objectStore('messages');
-        objectStore.openCursor().onsuccess = function(e) {
-            var cursor = e.target.result;
-            if (cursor) {
-                objects.push(cursor.value);
-                cursor.continue();
-            } else {
-                resolve(objects);
-            }
-        };
-    });
-}
-
-function deleteAllMessages() {
-    return new Promise(function(resolve, reject) {
-        if (!db) {
-            return reject();
-        }
-        var objectStore = db.transaction('messages', 'readwrite')
-            .objectStore('messages');
-        objectStore.clear().onsuccess = resolve;
-    });
-}
-
-
-
 
 
 self.addEventListener('install', function(e) {
@@ -69,11 +33,6 @@ self.addEventListener('install', function(e) {
 
 
 self.addEventListener('activate', function(e) {
-    var request = indexedDB.open('progressive-jungle', 1);
-    request.onsuccess = function(e) {
-        db = e.target.result;
-    };
-
     e.waitUntil(
         caches.keys().then(function(cacheKeys) {
             return Promise.all(cacheKeys.map(function(cacheKey) {
@@ -139,24 +98,49 @@ self.addEventListener('notificationclick', function(e) {
 });
 
 
+/** @TODO this sucks, must refactor this ugh **/
 self.addEventListener('sync', function(e) {
     if (e.tag === 'progressive-jungle-message') {
         e.waitUntil(
-            getAllMessages()
-                .then(function(messages) {
-                    return Promise.all(messages.map(function(message) {
-                        var request = new Request('/send-message', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(message)
-                        });
-                        return fetch(request);
-                    }));
-                })
-                .then(deleteAllMessages)
-                .catch(function(error) {
-                    console.error('Error getting all indexeddb messages.', error)
-                })
+            Promise.resolve().then(function() {
+                return new Promise(function(resolve, reject) {
+                    var request = indexedDB.open('progressive-jungle', 1);
+                    request.onsuccess = function(e) {
+                        var db = e.target.result;
+                        var objects = [];
+                        var objectStore = db.transaction('messages').objectStore('messages');
+                        objectStore.openCursor().onsuccess = function(e) {
+                            var cursor = e.target.result;
+                            if (cursor) {
+                                objects.push(cursor.value);
+                                cursor.continue();
+                            } else {
+                                resolve(objects);
+                            }
+                        };
+                    };
+                });
+            }).then(function(messages) {
+                return Promise.all(messages.map(function(message) {
+                    var request = new Request('/send-message', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(message)
+                    });
+                    return fetch(request);
+                }));
+            }).then(function() {
+                return new Promise(function(resolve, reject) {
+                    var request = indexedDB.open('progressive-jungle', 1);
+                    request.onsuccess = function(e) {
+                        var db = e.target.result;
+                        var objectStore = db.transaction('messages', 'readwrite').objectStore('messages');
+                        objectStore.clear().onsuccess = resolve;
+                    };
+                });
+            }).catch(function(error) {
+                console.error('Error inside the worst code ever.', error);
+            })
         );
     }
 });
