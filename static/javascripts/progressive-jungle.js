@@ -280,5 +280,7 @@ $('.logout-button').on('click', function() {
 
         localStorage.removeItem('name');
         localStorage.removeItem('avatar');
+    }).catch(function(error) {
+        console.error('Error signing out.', error);
     });
 });

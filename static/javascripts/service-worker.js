@@ -81,6 +81,8 @@ self.addEventListener('activate', function(e) {
                     return caches.delete(cacheKey);
                 }
             }));
+        }).catch(function(error) {
+            console.error('Error getting cache keys.', error);
         })
     );
 });
@@ -98,7 +100,11 @@ self.addEventListener('fetch', function(e) {
                         return cache.match('/offline');
                     }
                 });
+            }).catch(function(error) {
+                console.error('Error getting request match.', error);
             });
+        }).catch(function(error) {
+            console.error('Error opening cache.', error);
         })
     );
 });
@@ -148,6 +154,9 @@ self.addEventListener('sync', function(e) {
                     }));
                 })
                 .then(deleteAllMessages)
+                .catch(function(error) {
+                    console.error('Error getting all indexeddb messages.', error)
+                })
         );
     }
 });

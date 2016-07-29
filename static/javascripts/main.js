@@ -1,19 +1,19 @@
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-            console.info('Service worker successfully registered.', registration);
+    navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+        console.info('Service worker successfully registered.', registration);
 
-            registration.pushManager.getSubscription().then(function(subscription) {
-                if (subscription) {
-                    $('.subscription-button').text('Unsubscribe from Push Notifications').removeClass('button--loading');
-                } else {
-                    $('.subscription-button').text('Subscribe to Push Notifications').removeClass('button--loading');
-                }
-            });
-        })
-        .catch(function(error) {
-            console.error('Service worker registration failed.', error);
+        registration.pushManager.getSubscription().then(function(subscription) {
+            if (subscription) {
+                $('.subscription-button').text('Unsubscribe from Push Notifications').removeClass('button--loading');
+            } else {
+                $('.subscription-button').text('Subscribe to Push Notifications').removeClass('button--loading');
+            }
+        }).catch(function(error) {
+            console.error('Error getting push notification subscription.', error);
         });
+    }).catch(function(error) {
+        console.error('Service worker registration failed.', error);
+    });
 }
 
 
@@ -50,8 +50,13 @@ $('.subscription-button').on('click', function() {
                 .catch(function(error) {
                     toast.open(error.message);
                     button.removeClass('button--loading');
+                    console.error('Error subscribing to push notifications.', error);
                 });
+        }).catch(function(error) {
+            console.error('Error getting push notification subscription.', error);
         });
+    }).catch(function(error) {
+        console.error('Error getting registration.', error);
     });
 });
 
@@ -91,7 +96,10 @@ $('.message-form').on('submit', function(e) {
                     })
                     .catch(function(error) {
                         sendMessageTraditionally(message);
+                        console.error('Error registering for background sync.', error);
                     });
+            }).catch(function(error) {
+                console.error('Error getting registration.', error);
             });
         });
     } else {
