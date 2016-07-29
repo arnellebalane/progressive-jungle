@@ -1,4 +1,4 @@
-var cacheName = 'cache-v7';
+var cacheName = 'cache-v8';
 var urlsToCache = [
     '/',
     '/offline',

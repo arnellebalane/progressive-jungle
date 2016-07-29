@@ -161,6 +161,12 @@ a.button {
 }
 
 
+.form__title strong::after {
+    content: "!";
+    font-weight: normal;
+}
+
+
 .form__input {
     display: inline-block;
     width: 50rem;
@@ -175,6 +181,7 @@ a.button {
 
 .form__footer {
     margin-top: 15vh;
+    text-align: center;
 }
 
 
@@ -325,4 +332,66 @@ a.button {
     left: 50%;
     background-image: url("../images/home.png");
     transform: translate(-50%, -50%);
+}
+
+
+
+
+
+@media all and (max-device-width: 500px) {
+    .toast {
+        font-size: 4rem;
+    }
+
+
+    .form {
+        text-align: center;
+    }
+
+
+    .form__title {
+        font-size: 10rem;
+    }
+
+
+    .form__title strong {
+        display: block;
+    }
+
+
+    .form__input {
+        width: 90vw;
+        margin-bottom: 10px;
+        font-size: 4.4rem;
+    }
+
+
+    .subscription-button {
+        margin-bottom: 10px;
+    }
+
+
+    .button {
+        font-size: 3.6rem;
+    }
+
+
+    .button--large {
+        font-size: 4.4rem;
+    }
+
+
+    .button--small {
+        font-size: 2.8rem;
+    }
+
+
+    .messages:empty::before {
+        font-size: 4.8rem;
+    }
+
+
+    .message {
+        font-size: 6.4rem;
+    }
 }
