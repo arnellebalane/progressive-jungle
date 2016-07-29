@@ -293,8 +293,19 @@ a.button {
 }
 
 
-.message-screen {
+.message-screen,
+.offline-screen {
     flex-direction: column;
+}
+
+
+.offline-screen img {
+    width: 15rem;
+}
+
+
+.offline-screen h1 {
+    font-size: 2.8rem;
 }
 
 

@@ -39,6 +39,10 @@ app.get('/messages', function(req, res) {
     res.render('messages.html');
 });
 
+app.get('/offline', function(req, res) {
+    res.render('offline.html');
+});
+
 app.post('/send-message', function(req, res) {
     messages.push().set(req.body);
     res.json({ success: true });
