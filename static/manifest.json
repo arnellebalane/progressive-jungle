@@ -1,0 +1,16 @@
+{
+  "name": "Progressive Jungle",
+  "short_name": "Progressive Jungle",
+  "background_color": "#000",
+  "theme_color": "#4caf50",
+  "icons": [
+    {
+      "src": "/static/images/default-icon.png",
+      "sizes": "320x320",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "start_url": "/",
+  "gcm_sender_id": "40970501413"
+}

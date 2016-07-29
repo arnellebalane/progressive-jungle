@@ -67,7 +67,8 @@ var messenger = (function() {
             data: {
                 name: localStorage.getItem('name'),
                 avatar: localStorage.getItem('avatar'),
-                message: message
+                message: message,
+                senderId: localStorage.getItem('subscriptionId')
             },
             success: function(response) {
                 emitter.emit('sent', response);
@@ -112,12 +113,14 @@ var messageslist = (function() {
 var notifications = (function() {
     function subscribe(subscription) {
         var emitter = new EventEmitter();
+        var subscriptionId = subscription.endpoint.replace(/.*\//g, '');
 
         $.ajax({
             url: '/subscribe',
             type: 'POST',
-            data: JSON.parse(subscription),
+            data: JSON.parse(JSON.stringify(subscription)),
             success: function(response) {
+                localStorage.setItem('subscriptionId', subscriptionId);
                 emitter.emit('subscribed', response);
             },
             error: function(error) {
@@ -134,8 +137,9 @@ var notifications = (function() {
         $.ajax({
             url: '/unsubscribe',
             type: 'POST',
-            data: JSON.parse(subscription),
+            data: JSON.parse(JSON.stringify(subscription)),
             success: function(response) {
+                localStorage.removeItem('subscriptionId');
                 emitter.emit('subscribed', response);
             },
             error: function(error) {
@@ -174,8 +178,7 @@ var idb = (function() {
 
         var objectStore = db.transaction(store, 'readwrite')
             .objectStore(store);
-        objectStore.add(data);
-        objectStore.onsuccess = function(e) {
+        objectStore.add(data).onsuccess = function(e) {
             emitter.emit('complete', e);
         };
 
@@ -277,36 +280,7 @@ $('.logout-button').on('click', function() {
 
         localStorage.removeItem('name');
         localStorage.removeItem('avatar');
-    });
-});
-
-
-$('.message-form').on('submit', function(e) {
-    e.preventDefault();
-
-    var form = $(this);
-    var messageInput = form.find('.form__input');
-    var messageButton = form.find('.sendmessage-button');
-    var message = messageInput.val().trim();
-
-    if (messageButton.hasClass('button--loading') || message.length === 0) {
-        return null;
-    }
-
-    messageInput.prop('readonly', true);
-    messageButton.addClass('button--loading');
-    message = sendMessageToEveryone(message);
-
-    message.on('sent', function() {
-        messageInput.val('');
-        messageInput.prop('readonly', false);
-        messageButton.removeClass('button--loading');
-        toast.open('Message successfully sent.');
-    });
-
-    message.on('error', function() {
-        messageInput.prop('readonly', false);
-        messageButton.removeClass('button--loading');
-        toast.open('Message sending failed.');
+    }).catch(function(error) {
+        console.error('Error signing out.', error);
     });
 });

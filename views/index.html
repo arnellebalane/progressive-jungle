@@ -5,6 +5,7 @@
         <meta name="google-signin-client_id" content="40970501413-h49arguk33cagho03sgqgodhjufcmoor.apps.googleusercontent.com">
         <title>Progressive Jungle</title>
 
+        <link rel="manifest" href="/static/manifest.json">
         <link rel="stylesheet" href="/static/stylesheets/progressive-jungle.css">
     </head>
 
@@ -16,7 +17,7 @@
         </div>
 
         <form action="/send-message" class="screen screen--minimized form message-screen message-form">
-            <h1 class="form__title">Hello, <strong>Arnelle</strong>!</h1>
+            <h1 class="form__title">Hello, <strong>Anonymous User</strong></h1>
 
             <div class="form__input-group">
                 <input type="text" name="message" class="form__input">
@@ -24,7 +25,7 @@
             </div>
 
             <footer class="form__footer">
-                <button type="button" class="button button--small subscription-button">Subscribe to Push Notifications</button>
+                <button type="button" class="button button--small button--loading subscription-button">Subscribe to Push Notifications</button>
                 <a href="/messages" class="button button--small button--icon messages-button">&nbsp;</a>
                 <button type="button" class="button button--small button--icon logout-button">&nbsp;</button>
             </footer>
@@ -34,5 +35,6 @@
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script src="/static/javascripts/jquery.js"></script>
         <script src="/static/javascripts/progressive-jungle.js"></script>
+        <script src="/static/javascripts/main.js"></script>
     </body>
 </html>
