@@ -63,23 +63,15 @@ self.addEventListener('fetch', function(e) {
 
 self.addEventListener('push', function(e) {
     var notification = e.data ? e.data.json() : {
-        title: 'Push Notification',
+        title: 'Progressive Jungle',
         body: 'Hey, you received a push notification!',
         icon: '/static/images/default-icon.png'
     };
-    var options = { tag: 'progressive-jungle-message' };
     e.waitUntil(
-        self.registration.getNotifications(options).then(function(notifications) {
-            if (notifications.length > 0) {
-                notification.title = 'Progressive Jungle';
-                notification.body = 'You have ' + (notifications.length + 1) + ' notifications.';
-                notification.icon = '/static/images/default-icon.png';
-            }
-            self.registration.showNotification(notification.title, {
-                body: notification.body,
-                icon: notification.icon,
-                tag: 'progressive-jungle-message'
-            })
+        self.registration.showNotification(notification.title, {
+            body: notification.body,
+            icon: notification.icon,
+            tag: 'progressive-jungle-message'
         })
     );
 });
