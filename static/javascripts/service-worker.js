@@ -67,10 +67,19 @@ self.addEventListener('push', function(e) {
         body: 'Hey, you received a push notification!',
         icon: ''
     };
+    var options = { tag: 'progressive-jungle-message' };
     e.waitUntil(
-        self.registration.showNotification(notification.title, {
-            body: notification.body,
-            icon: notification.icon
+        self.registration.getNotifications(options).then(function(notifications) {
+            if (notifications.length > 0) {
+                notification.title = 'Progressive Jungle';
+                notification.body = 'You have ' + (notifications.length + 1) + ' notifications.';
+                notification.icon = '';
+            }
+            self.registration.showNotification(notification.title, {
+                body: notification.body,
+                icon: notification.icon,
+                tag: 'progressive-jungle-message'
+            })
         })
     );
 });
