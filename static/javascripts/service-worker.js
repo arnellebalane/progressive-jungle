@@ -65,7 +65,7 @@ self.addEventListener('push', function(e) {
     var notification = e.data ? e.data.json() : {
         title: 'Push Notification',
         body: 'Hey, you received a push notification!',
-        icon: ''
+        icon: '/static/images/default-icon.png'
     };
     var options = { tag: 'progressive-jungle-message' };
     e.waitUntil(
@@ -73,7 +73,7 @@ self.addEventListener('push', function(e) {
             if (notifications.length > 0) {
                 notification.title = 'Progressive Jungle';
                 notification.body = 'You have ' + (notifications.length + 1) + ' notifications.';
-                notification.icon = '';
+                notification.icon = '/static/images/default-icon.png';
             }
             self.registration.showNotification(notification.title, {
                 body: notification.body,
