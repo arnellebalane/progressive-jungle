@@ -1,4 +1,4 @@
-var cacheName = 'cache-v1';
+var cacheName = 'cache-v2';
 var urlsToCache = [
     '/',
     '/offline',
@@ -39,7 +39,9 @@ self.addEventListener('fetch', function(e) {
                 if (response) {
                     return response;
                 }
-                return fetch(e.request);
+                return fetch(e.request).catch(function() {
+                    return cache.match('/offline');
+                });
             });
         })
     );
