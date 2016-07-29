@@ -59,3 +59,18 @@ self.addEventListener('fetch', function(e) {
         })
     );
 });
+
+
+self.addEventListener('push', function(e) {
+    var notification = e.data ? e.data.json() : {
+        title: 'Push Notification',
+        body: 'Hey, you received a push notification!',
+        icon: ''
+    };
+    e.waitUntil(
+        self.registration.showNotification(notification.title, {
+            body: notification.body,
+            icon: notification.icon
+        })
+    );
+});

@@ -4,6 +4,8 @@ var bodyparser = require('body-parser');
 var nunjucks = require('nunjucks');
 var morgan = require('morgan');
 var firebase = require('firebase');
+var request = require('request');
+var webpush = require('web-push');
 var config = require('./config');
 
 
@@ -27,6 +29,8 @@ firebase.initializeApp({
 var database = firebase.database();
 var messages = database.ref('messages');
 
+webpush.setGCMAPIKey(config.get('GCM_API_KEY'));
+
 
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
@@ -47,6 +51,38 @@ app.get('/offline', function(req, res) {
 
 app.post('/send-message', function(req, res) {
     messages.push().set(req.body);
+    database.ref('subscriptions').on('value', function(data) {
+        var subscriptions = data.val();
+        var notification = {
+            title: req.body.name,
+            body: req.body.message,
+            icon: req.body.avatar
+        };
+
+        for (var key in subscriptions) {
+            var subscription = subscriptions[key];
+            if (subscription.keys) {
+                webpush.sendNotification(subscription.endpoint, {
+                    userPublicKey: subscription.keys.p256dh,
+                    userAuth: subscription.keys.auth,
+                    payload: JSON.stringify(notification)
+                });
+            } else {
+                var options = {
+                    url: 'https://android.googleapis.com/gcm/send',
+                    headers: {
+                        Authorization: 'key=' + config.get('GCM_API_KEY')
+                    },
+                    body: {
+                        registration_ids: key,
+                        notification: notification
+                    },
+                    json: true
+                };
+                request.post(options);
+            }
+        }
+    });
     res.json({ success: true });
 });
 
