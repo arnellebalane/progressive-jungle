@@ -30,6 +30,8 @@ var messages = database.ref('messages');
 
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/service-worker.js', express.static(
+    path.join(__dirname, 'static', 'javascripts', 'service-worker.js')));
 
 app.get('/', function(req, res) {
     res.render('index.html');
