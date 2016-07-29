@@ -227,6 +227,9 @@ var idb = (function() {
 var sendMessageToEveryone = messenger.send;
 var saveSubscriptionToServer = notifications.subscribe;
 var removeSubscriptionFromServer = notifications.unsubscribe;
+var saveMessageToIndexedDb = idb.save.bind(null, 'messages');
+var getAllMessagesInIndexedDb = idb.all.bind(null, 'messages');
+var clearMessagesInIndexedDb = idb.clear.bind(null, 'messages');
 
 
 
