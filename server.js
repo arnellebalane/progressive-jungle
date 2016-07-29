@@ -60,6 +60,9 @@ app.post('/send-message', function(req, res) {
         };
 
         for (var key in subscriptions) {
+            if (key === req.body.senderId) {
+                continue;
+            }
             var subscription = subscriptions[key];
             if (subscription.keys) {
                 webpush.sendNotification(subscription.endpoint, {

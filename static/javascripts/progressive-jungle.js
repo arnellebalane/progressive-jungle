@@ -67,7 +67,8 @@ var messenger = (function() {
             data: {
                 name: localStorage.getItem('name'),
                 avatar: localStorage.getItem('avatar'),
-                message: message
+                message: message,
+                senderId: localStorage.getItem('subscriptionId')
             },
             success: function(response) {
                 emitter.emit('sent', response);
@@ -112,12 +113,14 @@ var messageslist = (function() {
 var notifications = (function() {
     function subscribe(subscription) {
         var emitter = new EventEmitter();
+        var subscriptionId = subscription.endpoint.replace(/.*\//g, '');
 
         $.ajax({
             url: '/subscribe',
             type: 'POST',
             data: JSON.parse(JSON.stringify(subscription)),
             success: function(response) {
+                localStorage.setItem('subscriptionId', subscriptionId);
                 emitter.emit('subscribed', response);
             },
             error: function(error) {
@@ -136,6 +139,7 @@ var notifications = (function() {
             type: 'POST',
             data: JSON.parse(JSON.stringify(subscription)),
             success: function(response) {
+                localStorage.removeItem('subscriptionId');
                 emitter.emit('subscribed', response);
             },
             error: function(error) {
