@@ -153,6 +153,14 @@ var notifications = (function() {
 
 
 
+var sendMessageToEveryone = messenger.send;
+var saveSubscriptionToServer = notifications.subscribe;
+var removeSubscriptionFromServer = notifications.unsubscribe;
+
+
+
+
+
 var name = localStorage.getItem('name');
 if (name !== 'null') {
     $('.login-screen').addClass('hidden');
@@ -231,14 +239,15 @@ $('.message-form').on('submit', function(e) {
     var form = $(this);
     var messageInput = form.find('.form__input');
     var messageButton = form.find('.sendmessage-button');
+    var message = messageInput.val().trim();
 
-    if (messageButton.hasClass('button--loading')) {
+    if (messageButton.hasClass('button--loading') || message.length === 0) {
         return null;
     }
 
-    var message = messenger.send(messageInput.val());
     messageInput.prop('readonly', true);
     messageButton.addClass('button--loading');
+    message = sendMessageToEveryone(message);
 
     message.on('sent', function() {
         messageInput.val('');
