@@ -83,3 +83,16 @@ self.addEventListener('push', function(e) {
         })
     );
 });
+
+
+self.addEventListener('notificationclick', function(e) {
+    var options = { tag: 'progressive-jungle-message' };
+    e.waitUntil(
+        self.registration.getNotifications(options).then(function(notifications) {
+            notifications.forEach(function(notification) {
+                notification.close();
+            });
+            return self.clients.openWindow('/messages');
+        })
+    );
+});
