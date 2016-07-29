@@ -258,32 +258,6 @@ function login(user) {
 
 
 
-$('.login-button').on('click', function() {
-    if ($(this).hasClass('button--loading')) {
-        return null;
-    }
-
-    $(this).addClass('button--loading');
-    toast.close();
-
-    setTimeout(function() {
-        if (Math.random() < 0.5) {
-            toast.open('You are now logged in.');
-            $('.login-screen').addClass('screen--maximized');
-            $('.message-screen').removeClass('screen--minimized');
-            $(this).removeClass('button--loading');
-
-            localStorage.setItem('name', 'Arnelle Balane');
-            localStorage.setItem('avatar', 'https://avatars1.githubusercontent.com/u/1428598?v=3&s=460');
-            $('.form__title strong').text(localStorage.getItem('name'));
-        } else {
-            toast.open('Login failed. Please try again.');
-            $(this).removeClass('button--loading');
-        }
-    }.bind(this), 1000);
-});
-
-
 $('.logout-button').on('click', function() {
     var button = $(this);
 
