@@ -150,6 +150,77 @@ var notifications = (function() {
 })();
 
 
+var idb = (function() {
+    var request = indexedDB.open('progressive-jungle', 1);
+    var db = null;
+
+    request.onupgradeneeded = function(e) {
+        var db = e.target.result;
+        var messagesStore = db.createObjectStore('messages',
+            { autoIncrement: true })
+    };
+    request.onsuccess = function(e) {
+        db = e.target.result;
+    };
+    request.onerror = function() {
+        toast.open('IndexedDB failed to initialize.');
+    };
+
+    function save(store, data) {
+        if (!db) {
+            return toast.open('IndexedDB is not yet ready.');
+        }
+        var emitter = new EventEmitter();
+
+        var objectStore = db.transaction(store, 'readwrite')
+            .objectStore(store);
+        objectStore.add(data);
+        objectStore.onsuccess = function(e) {
+            emitter.emit('complete', e);
+        };
+
+        return emitter;
+    }
+
+    function all(store) {
+        if (!db) {
+            return toast.open('IndexedDB is not yet ready.');
+        }
+        var emitter = new EventEmitter();
+        var objects = [];
+
+        var objectStore = db.transaction(store).objectStore(store);
+        objectStore.openCursor().onsuccess = function(e) {
+            var cursor = e.target.result;
+            if (cursor) {
+                objects.push(cursor.value);
+                cursor.continue();
+            } else {
+                emitter.emit('complete', objects);
+            }
+        };
+
+        return emitter;
+    }
+
+    function clear(store) {
+        if (!db) {
+            return toast.open('IndexedDB is not yet ready.');
+        }
+        var emitter = new EventEmitter();
+
+        var objectStore = db.transaction(store).objectStore(store);
+        objectStore.clear().onsuccess = function(e) {
+            emitter.emit('complete', e);
+        };
+
+        return emitter;
+    }
+
+    return { save: save, all: all, clear: clear };
+})();
+
+
 
 
 
