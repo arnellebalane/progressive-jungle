@@ -2,6 +2,14 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
         .then(function(registration) {
             console.info('Service worker successfully registered.', registration);
+
+            registration.pushManager.getSubscription().then(function(subscription) {
+                if (subscription) {
+                    $('.subscription-button').text('Unsubscribe from Push Notifications').removeClass('button--loading');
+                } else {
+                    $('.subscription-button').text('Subscribe to Push Notifications').removeClass('button--loading');
+                }
+            });
         })
         .catch(function(error) {
             console.error('Service worker registration failed.', error);
@@ -28,13 +36,14 @@ $('.subscription-button').on('click', function() {
         registration.pushManager.getSubscription().then(function(subscription) {
             if (subscription) {
                 return subscription.unsubscribe().then(function() {
+                    removeSubscriptionFromServer(subscription);
                     toast.open('You are now unsubscribed from push notifications.');
                     button.text('Subscribe to Push Notifications').removeClass('button--loading');
                 });
             }
             registration.pushManager.subscribe({ userVisibleOnly: true })
                 .then(function(subscription) {
-                    console.log(subscription);
+                    saveSubscriptionToServer(subscription);
                     toast.open('You are now subscribed to push notifications.');
                     button.text('Unsubscribe from Push Notifications').removeClass('button--loading');
                 })

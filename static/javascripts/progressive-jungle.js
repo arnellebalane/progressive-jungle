@@ -116,7 +116,7 @@ var notifications = (function() {
         $.ajax({
             url: '/subscribe',
             type: 'POST',
-            data: JSON.parse(subscription),
+            data: JSON.parse(JSON.stringify(subscription)),
             success: function(response) {
                 emitter.emit('subscribed', response);
             },
@@ -134,7 +134,7 @@ var notifications = (function() {
         $.ajax({
             url: '/unsubscribe',
             type: 'POST',
-            data: JSON.parse(subscription),
+            data: JSON.parse(JSON.stringify(subscription)),
             success: function(response) {
                 emitter.emit('subscribed', response);
             },
