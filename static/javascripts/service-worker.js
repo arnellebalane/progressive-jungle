@@ -15,6 +15,42 @@ var urlsToCache = [
 ];
 
 
+var db = null;
+
+function getAllMessages() {
+    return new Promise(function(resolve, reject) {
+        if (!db) {
+            return reject();
+        }
+        var objects = [];
+        var objectStore = db.transaction('messages').objectStore('messages');
+        objectStore.openCursor().onsuccess = function(e) {
+            var cursor = e.target.result;
+            if (cursor) {
+                objects.push(cursor.value);
+                cursor.continue();
+            } else {
+                resolve(objects);
+            }
+        };
+    });
+}
+
+function deleteAllMessages() {
+    return new Promise(function(resolve, reject) {
+        if (!db) {
+            return reject();
+        }
+        var objectStore = db.transaction('messages', 'readwrite')
+            .objectStore('messages');
+        objectStore.clear().onsuccess = resolve;
+    });
+}
+
+
+
+
+
 self.addEventListener('install', function(e) {
     e.waitUntil(
         caches.open(cacheName)
@@ -33,6 +69,11 @@ self.addEventListener('install', function(e) {
 
 
 self.addEventListener('activate', function(e) {
+    var request = indexedDB.open('progressive-jungle', 1);
+    request.onsuccess = function(e) {
+        db = e.target.result;
+    };
+
     e.waitUntil(
         caches.keys().then(function(cacheKeys) {
             return Promise.all(cacheKeys.map(function(cacheKey) {
@@ -89,4 +130,24 @@ self.addEventListener('notificationclick', function(e) {
             return self.clients.openWindow('/messages');
         })
     );
+});
+
+
+self.addEventListener('sync', function(e) {
+    if (e.tag === 'progressive-jungle-message') {
+        e.waitUntil(
+            getAllMessages()
+                .then(function(messages) {
+                    return Promise.all(messages.map(function(message) {
+                        var request = new Request('/send-message', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(message)
+                        });
+                        return fetch(request);
+                    }));
+                })
+                .then(deleteAllMessages)
+        );
+    }
 });

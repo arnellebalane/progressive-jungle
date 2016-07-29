@@ -54,3 +54,53 @@ $('.subscription-button').on('click', function() {
         });
     });
 });
+
+
+
+$('.message-form').on('submit', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+    var messageInput = form.find('.form__input');
+    var messageButton = form.find('.sendmessage-button');
+    var message = messageInput.val().trim();
+
+    if (messageButton.hasClass('button--loading') || message.length === 0) {
+        return null;
+    }
+
+    messageInput.prop('readonly', true);
+    messageButton.addClass('button--loading');
+    message = sendMessageToEveryone(message);
+
+    message.on('sent', function(data) {
+        messageInput.val('');
+        messageInput.prop('readonly', false);
+        messageButton.removeClass('button--loading');
+        toast.open('Message successfully sent.');
+    });
+
+    message.on('error', function() {
+        messageInput.prop('readonly', false);
+        messageButton.removeClass('button--loading');
+        toast.open('Message sending failed.');
+        backgroundSyncMessage({
+            message: messageInput.val().trim(),
+            name: localStorage.getItem('name'),
+            avatar: localStorage.getItem('avatar'),
+            senderId: localStorage.getItem('subscriptionId')
+        });
+    });
+});
+
+
+
+function backgroundSyncMessage(message) {
+    if ('SyncManager' in window) {
+        navigator.serviceWorker.getRegistration().then(function(registration) {
+            registration.sync.register('progressive-jungle-message').then(function() {
+                saveMessageToIndexedDb(message);
+            });
+        });
+    }
+}

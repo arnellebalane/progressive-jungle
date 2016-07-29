@@ -283,34 +283,3 @@ $('.logout-button').on('click', function() {
         localStorage.removeItem('avatar');
     });
 });
-
-
-$('.message-form').on('submit', function(e) {
-    e.preventDefault();
-
-    var form = $(this);
-    var messageInput = form.find('.form__input');
-    var messageButton = form.find('.sendmessage-button');
-    var message = messageInput.val().trim();
-
-    if (messageButton.hasClass('button--loading') || message.length === 0) {
-        return null;
-    }
-
-    messageInput.prop('readonly', true);
-    messageButton.addClass('button--loading');
-    message = sendMessageToEveryone(message);
-
-    message.on('sent', function() {
-        messageInput.val('');
-        messageInput.prop('readonly', false);
-        messageButton.removeClass('button--loading');
-        toast.open('Message successfully sent.');
-    });
-
-    message.on('error', function() {
-        messageInput.prop('readonly', false);
-        messageButton.removeClass('button--loading');
-        toast.open('Message sending failed.');
-    });
-});
