@@ -1,4 +1,4 @@
-var cacheName = 'cache-v2';
+var cacheName = 'cache-v1';
 var urlsToCache = [
     '/',
     '/offline',
@@ -28,6 +28,19 @@ self.addEventListener('install', function(e) {
             .catch(function(error) {
                 console.error('Caching failed for cache:', cacheName, error);
             })
+    );
+});
+
+
+self.addEventListener('activate', function(e) {
+    e.waitUntil(
+        caches.keys().then(function(cacheKeys) {
+            return Promise.all(cacheKeys.map(function(cacheKey) {
+                if (cacheKey !== cacheName) {
+                    return caches.delete(cacheKey);
+                }
+            }));
+        })
     );
 });
 
